@@ -2,6 +2,7 @@ package com.example.com.e_com.dto;
 
 import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,3 +17,6 @@ public class ProductResponse {
     private BigDecimal price;
     
 }
+
+
+//Product

@@ -24,3 +24,7 @@ public class ProductRequest {
     private BigDecimal price;
     
 }
+
+
+//DTO class is used to transfer data between different layers of the application, such as from the controller to the service layer. It helps to encapsulate the data and can also include validation annotations to ensure that the incoming data meets certain criteria before it is processed further. In this case, ProductRequest is a DTO that represents the data needed to create a new product, including its name, description, and price.
+//it contains information about the product that the client wants to create, and it can be used in the controller to receive the data from the client and then pass it to the service layer for further processing, such as saving it to the database.
