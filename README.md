@@ -101,7 +101,7 @@ SecurityConfig (key points)
 Product flow (concepts + implementation)
 ----------------------------------------
 Files:
-- `ProductController` — REST endpoints: GET /products, POST /products, GET /products/{id}, PUT /products/{id}, DELETE /products/{id}
+- `ProductController` — REST endpoints: GET /products, GET /products/search, POST /products, GET /products/{id}, PUT /products/{id}, DELETE /products/{id}
 - `ProductRequest` / `ProductResponse` DTOs — incoming/outgoing payloads
 - `ProductService` / `ProductServiceImpl` — business logic and mapping between DTO and `Product` entity
 - `ProductRepository` — Spring Data JPA repository for `Product` entity
@@ -143,7 +143,11 @@ pm.environment.set("jwt_token", pm.response.json().token);
 - GET `http://localhost:8082/products`
 - Expect `200 OK` with array
 
-6) Get / Update / Delete by ID similarly
+6) Search products by keyword
+- GET `http://localhost:8082/api/products/search?keyword=Example`
+- Expect `200 OK` with matching products in name or description
+
+7) Get / Update / Delete by ID similarly
 
 Troubleshooting
 ---------------

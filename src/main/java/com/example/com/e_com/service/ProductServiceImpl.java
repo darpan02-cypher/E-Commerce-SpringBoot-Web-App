@@ -1,7 +1,6 @@
 package com.example.com.e_com.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> getAllProducts() {
         return productRepo.findAll().stream()
                 .map(this::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -29,6 +28,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return toResponse(product);
+    }
+
+    @Override
+    public List<ProductResponse> searchProducts(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return getAllProducts();
+        }
+        String normalized = keyword.trim();
+        return productRepo.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(normalized, normalized).stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override
