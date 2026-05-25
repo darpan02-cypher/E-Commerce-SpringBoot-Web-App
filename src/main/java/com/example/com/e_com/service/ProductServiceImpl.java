@@ -2,6 +2,7 @@ package com.example.com.e_com.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.com.e_com.dto.ProductRequest;
@@ -23,6 +24,14 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
+    //pagination 
+    @Override
+    public List<ProductResponse> getProductsPage(int page, int size) {
+        return productRepo.findAll(PageRequest.of(page, size)).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepo.findById(id)
@@ -34,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> searchProducts(String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return getAllProducts();
+            
         }
         String normalized = keyword.trim();
         return productRepo.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(normalized, normalized).stream()

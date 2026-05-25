@@ -19,7 +19,6 @@ import com.example.com.e_com.dto.ProductResponse;
 import com.example.com.e_com.service.ProductService;
 
 import jakarta.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,6 +31,14 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
+    //pagination with page and size params -- keeping default values for convenience - 3  
+    @GetMapping("/page")
+    public ResponseEntity<List<ProductResponse>> getProductsPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size) {
+        return ResponseEntity.ok(productService.getProductsPage(page, size));
+    }   
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
