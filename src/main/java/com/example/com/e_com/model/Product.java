@@ -27,7 +27,8 @@ public class Product {
     private String description;
     
     private BigDecimal price;  // Using BigDecimal for monetary values is a good practice to avoid floating-point issues
-
+ 
+   
     // Getters and Setters not needed due to Lombok annotations
 
    

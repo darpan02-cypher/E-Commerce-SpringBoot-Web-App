@@ -21,7 +21,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/login")
+    @PostMapping("/login")  //Requestmapping -- gives GET by default, so we need to specify POST here for login endpoint
     public AuthResponse login(@RequestBody AuthRequest req) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())
