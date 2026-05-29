@@ -1,6 +1,7 @@
 package com.example.com.e_com.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name="cart_id") // This annotation specifies that the cart_id column in the cart_items table is a foreign key that references the primary key of the Cart entity. It establishes a many-to-one relationship between CartItem and Cart, meaning that multiple CartItem entities can be associated with a single Cart entity.
-    @JsonBackReference
+    @JsonBackReference // This annotation is used to prevent infinite recursion during JSON serialization. It indicates that this side of the relationship is the "back" side, and it will be ignored during serialization. This is important because Cart has a reference to CartItem, and CartItem has a reference back to Cart, which could lead to an infinite loop when converting to JSON.
     private Cart cart;
 
 

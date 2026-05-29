@@ -30,7 +30,7 @@ public class CartServiceImpl implements CartService {
             CartRequest request){
 
         Cart cart = cartRepository.findById(cartId)
-                .orElseGet(() -> cartRepository.save(new Cart()));
+                .orElseGet(() -> cartRepository.save(new Cart()));  ///agar cart exist nahi karta to new cart create kar do add 
 
         Product product =
                 productRepository.findById(
@@ -57,4 +57,36 @@ public class CartServiceImpl implements CartService {
                             "Cart not found"));
     }
 
+
+
+    @Override
+        public Cart removeFromCart(
+                Long cartId,
+                CartRequest request) {
+        
+                Cart cart = cartRepository.findById(cartId)
+                        .orElseThrow(() -> new RuntimeException("Cart not found"));
+        
+                CartItem itemToRemove = cart.getItems().stream()
+                        .filter(item -> item.getProduct().getId().equals(request.getProductId()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Product not in cart"));
+        
+                if (itemToRemove.getQuantity() > request.getQuantity()) {
+                itemToRemove.setQuantity(itemToRemove.getQuantity() - request.getQuantity());
+                cartItemRepository.save(itemToRemove);
+                } else {
+                cart.getItems().remove(itemToRemove);
+                cartItemRepository.delete(itemToRemove);
+                }
+        
+                return cartRepository.save(cart);
+        }
 }
+
+//explainantion of what we id here in removeFromCart method in simple -
+//1. We first fetch the cart using the cartId. If the cart doesn't exist, we throw an exception.
+//2. We then look for the CartItem in the cart that matches the productId from the CartRequest. If we don't find such an item, we throw another exception.
+//3. If the item exists and its quantity is greater than the quantity we want to remove, we simply reduce the quantity of that item and save it.
+//4. If the quantity to remove is greater than or equal to the existing quantity, we remove the item from the cart and delete it from the repository.
+//5. Finally, we save the updated cart and return it.

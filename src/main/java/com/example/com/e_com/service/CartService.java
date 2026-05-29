@@ -11,4 +11,10 @@ public interface CartService {
 
 
     Cart getCart(Long cartId);
+
+
+    //Remove item from cart
+    Cart removeFromCart(
+            Long cartId,
+            CartRequest request);   //cartRequest me productId aur quantity hoga, jise use karke cart item ko remove karna hai
 }
