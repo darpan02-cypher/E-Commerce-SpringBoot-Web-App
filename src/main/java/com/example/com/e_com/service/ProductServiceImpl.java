@@ -9,6 +9,7 @@ import com.example.com.e_com.dto.ProductRequest;
 import com.example.com.e_com.dto.ProductResponse;
 import com.example.com.e_com.model.Product;
 import com.example.com.e_com.repository.ProductRepository;
+import com.example.com.e_com.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         return toResponse(product);
     }
 
@@ -60,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest req) {
         Product existing = productRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         existing.setName(req.getName());
         existing.setDescription(req.getDescription());
         existing.setPrice(req.getPrice());

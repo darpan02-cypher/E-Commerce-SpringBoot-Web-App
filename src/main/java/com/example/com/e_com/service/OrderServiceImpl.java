@@ -15,6 +15,8 @@ import com.example.com.e_com.repository.CartItemRepository;
 import com.example.com.e_com.repository.CartRepository;
 
 import com.example.com.e_com.repository.OrderRepository;
+import com.example.com.e_com.exception.ResourceNotFoundException;
+import com.example.com.e_com.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,14 +37,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderById(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         return toResponse(order);
     }
 
     @Override
     public OrderResponse createOrderFromCart(Long cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        if (cart.getItems().isEmpty()) throw new RuntimeException("Cart is empty");
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+        if (cart.getItems().isEmpty()) throw new BadRequestException("Cart is empty");
 
         Order order = new Order();
         // build order items

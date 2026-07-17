@@ -9,6 +9,8 @@ import com.example.com.e_com.model.Product;
 import com.example.com.e_com.repository.CartItemRepository;
 import com.example.com.e_com.repository.CartRepository;
 import com.example.com.e_com.repository.ProductRepository;
+import com.example.com.e_com.exception.ResourceNotFoundException;
+import com.example.com.e_com.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +38,7 @@ public class CartServiceImpl implements CartService {
                 productRepository.findById(
                         request.getProductId())
                 .orElseThrow(
-                        () -> new RuntimeException(
+                        () -> new ResourceNotFoundException(
                                 "Product not found"));
 
         CartItem item = new CartItem();
@@ -51,11 +53,11 @@ public class CartServiceImpl implements CartService {
     }
 
      @Override       
-    public Cart getCart(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(() ->
-                    new RuntimeException(
-                            "Cart not found"));
-    }
+        public Cart getCart(Long cartId) {
+                return cartRepository.findById(cartId).orElseThrow(() ->
+                                        new ResourceNotFoundException(
+                                                        "Cart not found"));
+        }
 
 
 
@@ -65,12 +67,12 @@ public class CartServiceImpl implements CartService {
                 CartRequest request) {
         
                 Cart cart = cartRepository.findById(cartId)
-                        .orElseThrow(() -> new RuntimeException("Cart not found"));
-        
+                        .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+
                 CartItem itemToRemove = cart.getItems().stream()
                         .filter(item -> item.getProduct().getId().equals(request.getProductId()))
                         .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Product not in cart"));
+                        .orElseThrow(() -> new BadRequestException("Product not in cart"));
         
                 if (itemToRemove.getQuantity() > request.getQuantity()) {
                 itemToRemove.setQuantity(itemToRemove.getQuantity() - request.getQuantity());

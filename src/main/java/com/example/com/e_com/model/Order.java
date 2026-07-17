@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "orders")
@@ -38,7 +39,7 @@ public class Order {
     @JsonManagedReference
     private List<OrderItem> items = new ArrayList<>();
 
-    @PrePersist
+    @PrePersist  // This method is called before the entity is persisted (saved) to the database. It ensures that certain fields are set to default values if they are not already set.
     public void prePersist() {
         if (this.createdAt == null) this.createdAt = LocalDateTime.now(java.time.Clock.systemUTC());
         if (this.totalAmount == null) {
