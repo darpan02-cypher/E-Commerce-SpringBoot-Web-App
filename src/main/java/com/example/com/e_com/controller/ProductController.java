@@ -19,6 +19,8 @@ import com.example.com.e_com.dto.ProductResponse;
 import com.example.com.e_com.service.ProductService;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,9 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        logger.info("API GET /products - fetch all");
         return ResponseEntity.ok(productService.getAllProducts());
     }
     //pagination with page and size params -- keeping default values for convenience - 3  
@@ -36,32 +40,38 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> getProductsPage(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "3") int size) {
+        logger.info("API GET /products/page - page={}, size={}", page, size);
         return ResponseEntity.ok(productService.getProductsPage(page, size));
     }   
 
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        logger.info("API GET /products/{}", id);
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.info("API GET /products/search - keyword={}", keyword);
         return ResponseEntity.ok(productService.searchProducts(keyword));
     }
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest req) {
+        logger.info("API POST /products - create name={}", req.getName());
         return new ResponseEntity<>(productService.createProduct(req), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest req) {
+        logger.info("API PUT /products/{} - update", id);
         return ResponseEntity.ok(productService.updateProduct(id, req));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        logger.info("API DELETE /products/{}", id);
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

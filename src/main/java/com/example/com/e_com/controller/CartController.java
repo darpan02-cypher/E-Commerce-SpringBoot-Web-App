@@ -11,6 +11,8 @@ import com.example.com.e_com.dto.CartRequest;
 import com.example.com.e_com.model.Cart;
 import com.example.com.e_com.service.CartService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class CartController {
 
     private final CartService cartService;
+        private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
 
     @PostMapping("/{cartId}/add")
@@ -29,6 +32,7 @@ public class CartController {
 
             @RequestBody CartRequest request){
 
+        logger.info("API POST /api/cart/{}/add - productId={}, quantity={}", cartId, request.getProductId(), request.getQuantity());
         return ResponseEntity.ok(
                 cartService.addToCart(
                         cartId,
@@ -39,7 +43,7 @@ public class CartController {
     @GetMapping("/{cartId}")
     public ResponseEntity<Cart>
     getCart(@PathVariable Long cartId){
-
+        logger.info("API GET /api/cart/{}", cartId);
         return ResponseEntity.ok(
                 cartService.getCart(cartId));
     }
@@ -50,7 +54,7 @@ public class CartController {
     removeFromCart(
             @PathVariable Long cartId,
             @RequestBody CartRequest request){
-
+        logger.info("API POST /api/cart/{}/remove - productId={}, quantity={}", cartId, request.getProductId(), request.getQuantity());
         return ResponseEntity.ok(
                 cartService.removeFromCart(
                         cartId,
