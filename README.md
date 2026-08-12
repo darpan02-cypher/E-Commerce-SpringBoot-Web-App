@@ -170,6 +170,76 @@ Next steps / improvements
 - Add token refresh and logout (token blacklist or short expiry + refresh token).
 - Add integration tests for auth and product endpoints.
 
+Log Intelligence POC
+--------------------
+This project now includes a lightweight local Log Intelligence proof-of-concept that consumes structured JSON logs written by the application.
+
+Architecture
+```
+Spring Boot Application
+        ↓
+SLF4J + Logback
+        ↓
+Structured JSON Logs
+        ↓
+Rolling local log file: logs/ecommerce-application.json
+        ↓
+Log Intelligence Processor
+        ↓
+Parsing + event classification
+        ↓
+Incident grouping and severity
+        ↓
+REST API: /api/log-intelligence/analyze, /api/log-intelligence/summary
+```
+
+Key behavior
+- Logs are written directly to a rolling JSON file using Logback.
+- A request correlation filter adds `requestId`, `endpoint`, `httpMethod`, `status`, and `event` to MDC.
+- Structured events include meaningful names like `AUTHENTICATION_SUCCESS`, `ORDER_CREATED`, `CART_REMOVE`, and `SLOW_REQUEST`.
+- The POC reads the log file locally and performs deterministic classification and incident grouping.
+- No Splunk, no Splunk forwarder, no Filebeat, no Fluentd, no Kafka, and no external log agent are required.
+
+How to test the POC
+1. Start the application: `mvn spring-boot:run`
+2. Generate traffic with existing APIs:
+   - `POST /auth/login`
+   - `POST /products`
+   - `POST /api/cart/{cartId}/add`
+   - `POST /api/cart/{cartId}/remove`
+   - `POST /orders/{cartId}`
+3. Inspect the incident API:
+   - `GET /api/log-intelligence/analyze`
+   - `GET /api/log-intelligence/summary`
+
+Example incident response
+```json
+{
+  "totalLogsAnalyzed": 1250,
+  "incidentsDetected": 3,
+  "incidents": [
+    {
+      "category": "DATABASE",
+      "severity": "HIGH",
+      "occurrenceCount": 18,
+      "probableCause": "Database connectivity or query failure"
+    },
+    {
+      "category": "PAYMENT",
+      "severity": "MEDIUM",
+      "occurrenceCount": 7,
+      "probableCause": "Payment processing failures or gateway issues"
+    }
+  ]
+}
+```
+
+Future path with Splunk
+-----------------------
+Current POC: `Application → JSON File → Log Intelligence`
+
+Future extension: `Application → JSON File / Agent → Splunk → Log Intelligence`
+
 If you want, I can:
 - Add Postman collection file (exported) for you to import and run tests quickly.
 - Replace the in-memory user with a real `User`+`Repository` implementation and register endpoint.

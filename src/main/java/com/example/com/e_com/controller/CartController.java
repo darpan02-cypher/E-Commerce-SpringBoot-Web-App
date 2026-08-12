@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.com.e_com.dto.CartRequest;
 import com.example.com.e_com.model.Cart;
 import com.example.com.e_com.service.CartService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,7 +32,9 @@ public class CartController {
 
             @RequestBody CartRequest request){
 
+        MDC.put("event", "INVENTORY_CHECK");
         logger.info("API POST /api/cart/{}/add - productId={}, quantity={}", cartId, request.getProductId(), request.getQuantity());
+        MDC.remove("event");
         return ResponseEntity.ok(
                 cartService.addToCart(
                         cartId,
@@ -43,7 +45,9 @@ public class CartController {
     @GetMapping("/{cartId}")
     public ResponseEntity<Cart>
     getCart(@PathVariable Long cartId){
+        MDC.put("event", "CART_VIEW");
         logger.info("API GET /api/cart/{}", cartId);
+        MDC.remove("event");
         return ResponseEntity.ok(
                 cartService.getCart(cartId));
     }
@@ -54,7 +58,9 @@ public class CartController {
     removeFromCart(
             @PathVariable Long cartId,
             @RequestBody CartRequest request){
+        MDC.put("event", "CART_REMOVE");
         logger.info("API POST /api/cart/{}/remove - productId={}, quantity={}", cartId, request.getProductId(), request.getQuantity());
+        MDC.remove("event");
         return ResponseEntity.ok(
                 cartService.removeFromCart(
                         cartId,
