@@ -26,7 +26,7 @@ public class Cart {
     private Long id;
 
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL) // mappedBy - is used to specify the field in the CartItem entity that owns the relationship. In this case, it indicates that the cart field in CartItem is the owner of the relationship. CascadeType.ALL - means that any operation (like persist, merge, remove) performed on the Cart entity will also be cascaded to the associated CartItem entities. This ensures that when a Cart is saved or deleted, all related CartItems are also saved or deleted accordingly.
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true) // mappedBy - is used to specify the field in the CartItem entity that owns the relationship. In this case, it indicates that the cart field in CartItem is the owner of the relationship. CascadeType.ALL - means that any operation (like persist, merge, remove) performed on the Cart entity will also be cascaded to the associated CartItem entities. This ensures that when a Cart is saved or deleted, all related CartItems are also saved or deleted accordingly. orphanRemoval - ensures that removing a CartItem from this collection (e.g. clearing the cart after checkout) actually deletes its row, not just disassociates it.
     @JsonManagedReference
     private List<CartItem> items = new ArrayList<>();   // Initialize the items list to avoid NullPointerException when adding items to the cart
 

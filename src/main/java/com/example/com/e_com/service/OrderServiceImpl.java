@@ -3,6 +3,7 @@ package com.example.com.e_com.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.com.e_com.dto.OrderItemResponse;
 import com.example.com.e_com.dto.OrderResponse;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponse createOrderFromCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
         if (cart.getItems().isEmpty()) throw new BadRequestException("Cart is empty");
