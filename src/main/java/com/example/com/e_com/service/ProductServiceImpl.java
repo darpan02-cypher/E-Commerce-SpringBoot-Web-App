@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.com.e_com.dto.ProductRequest;
 import com.example.com.e_com.dto.ProductResponse;
+import com.example.com.e_com.exception.ResourceNotFoundException;
 import com.example.com.e_com.model.Product;
 import com.example.com.e_com.repository.ProductRepository;
-import com.example.com.e_com.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class ProductServiceImpl implements ProductService {
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-    private final ProductRepository productRepo;
+    private final ProductRepository productRepo; //productRepo is an instance of ProductRepository, which is a Spring Data JPA repository for the Product entity. It provides methods to perform CRUD operations on the Product table in the database.
 
     @Override
     public List<ProductResponse> getAllProducts() {
